@@ -50,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "@welldone-software/why-did-you-render": "^6.2.0",
     "eslint": "^7.30.0",
     "eslint-plugin-react": "^7.24.0",
     "tailwindcss": "^2.2.4"
