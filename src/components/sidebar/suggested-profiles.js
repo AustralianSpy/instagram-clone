@@ -12,7 +12,7 @@ export default function SuggestedProfile({ profileDocId, username, profileId, us
         // update the following array of logged in user
         await updateLoggedInUserFollowing(loggedInUserDocId, profileId, false);
         // update followers array of user who has been followed
-        await updateFollowedUserFollowers(profileDocId, loggedInUserDocId, false);
+        await updateFollowedUserFollowers(profileDocId, userId, false);
     }
 
     return !followed ? (
