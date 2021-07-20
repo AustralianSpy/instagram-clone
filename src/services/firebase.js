@@ -147,6 +147,41 @@ export async function toggleFollow(
     profileUserId,
     followingUserId
     ) {
+        // 1st param: doc id of active user requesting follow status change
+        // 2nd param: user id of profile active user is interacting with
+        // 3rd param: t/f is active user already following this profile?
         await updateLoggedInUserFollowing(activeUserDocId, profileUserId, isFollowingProfile);
+        
+        // 1st param: doc id of active user requesting follow status change
+        // 2nd param: user id of profile active user is interacting with
+        // 3rd param: t/f is the active user still following the profile in question?
         await updateFollowedUserFollowers(profileDocId, followingUserId, isFollowingProfile);
+}
+
+export async function getSinglePost(photoId, userId) {
+
+    const result = await firebase
+        .firestore()
+        .collection('photos')
+        .where('photoId', '==', photoId)
+        .get();
+    
+    const photo = result.docs.map((item) => ({
+        ...item.data(),
+        docId: item.id
+    }));
+
+    const singlePhotoWithUserDetails = await Promise.all(
+        photo.map(async (content) => {
+            let userLikedPhoto = false;
+            if (content.likes.includes(userId)) {
+                userLikedPhoto = true;
+            }
+            const user = await getUserByUserId(content.userId);
+            const { username } = user[0];
+            return { username, ...content, userLikedPhoto };
+        })
+    )
+
+    return singlePhotoWithUserDetails;
 }

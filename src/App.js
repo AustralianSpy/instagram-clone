@@ -12,6 +12,7 @@ const SignUp = lazy(() => import('./pages/sign-up'));
 const NotFound = lazy(() => import('./pages/not-found'));
 const Dashboard = lazy(() => import('./pages/dashboard'));
 const Profile = lazy(() => import('./pages/profile'));
+const SinglePost = lazy(() => import('./pages/single-post'));
 
 // 3:36:30 update seed file + firebase to
 // fix broken profile image connection.
@@ -33,7 +34,8 @@ export default function App() {
             <ProtectedRoute user={user} path={ROUTES.DASHBOARD} exact>
               <Dashboard />
             </ProtectedRoute>
-            <Route component={NotFound} />
+            <Route path={ROUTES.POST} component={SinglePost} />
+            <Route component={NotFound} />            
           </Switch>
       </Suspense>
     </Router>
