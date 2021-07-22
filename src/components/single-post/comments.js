@@ -9,7 +9,10 @@ export default function Comments({docId, comments: allComments, posted, commentI
     
     return (
         <>
-            <div className="p-4 pt-1 pb-4 h-full">
+            <div className="flex flex-col p-4 pt-1 pb-4 h-full">
+                <p className="text-gray-base uppercase text-xs mb-4">
+                    {formatDistance(posted, new Date())} ago
+                </p>
                 {comments.length >= 3 && (
                     <p className="text-sm text-gray-base mb-1 cursor-pointer">
                         View all {comments.length} comments...
@@ -23,9 +26,6 @@ export default function Comments({docId, comments: allComments, posted, commentI
                         <span>{item.comment}</span>
                     </p>
                 ))}
-                <p className="text-gray-base uppercase text-xs mt-2">
-                    {formatDistance(posted, new Date())} ago
-                </p>
             </div>
             <AddComment
                 docId={docId}
