@@ -2,11 +2,16 @@ import { useContext } from 'react';
 import FirebaseContext from '../context/firebase';
 import UserContext from '../context/user';
 import * as ROUTES from '../constants/routes';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton';
+import useUser from '../hooks/use-user';
+
 
 export default function Header() {
+    const { user: loggedInUser } = useContext(UserContext);
+    const { user } = useUser(loggedInUser?.uid);
     const { firebase } = useContext(FirebaseContext);
-    const { user } = useContext(UserContext);
+    const history = useHistory();
 
     return <header className="h-16 bg-white border-b border-gray-primary mb-8 p-2">
         <div className="container mx-auto max-w-screen-lg h-full">
@@ -19,7 +24,7 @@ export default function Header() {
                     </h1>
                 </div>
                 <div className="text-grey-700 text-center flex items-center align-items">
-                    {user ? (
+                    {loggedInUser ? (
                         <>
                             <Link to={ROUTES.DASHBOARD} title="Home" aria-label="Dashboard">
                                 <svg 
@@ -41,10 +46,14 @@ export default function Header() {
                                 to={ROUTES.LOGIN}
                                 title="Home"
                                 aria-label="Logout"
-                                onClick={() => firebase.auth().signOut()}
+                                onClick={() => {
+                                    firebase.auth().signOut();
+                                    history.push(ROUTES.LOGIN);
+                                }}
                                 onKeyDown={(event) => {
                                     if (event.key == 'Enter') {
                                         firebase.auth().signOut();
+                                        history.push(ROUTES.LOGIN);
                                     }
                                 }}
                             >
@@ -63,15 +72,19 @@ export default function Header() {
                                     />
                                 </svg>  
                             </Link>
-                            <div className="flex items-center cursor-pointer">
-                                <Link to={`/p/${user.displayName}`}>
+                            {!user?.username ? (
+                                <Skeleton count={1} height={30} width={30} />
+                            ) : (
+                                <div className="flex items-center cursor-pointer">
+                                <Link to={`/p/${user?.username}`}>
                                     <img
                                         className="rounded-full h-8 w-8 flex"
-                                        src={`/images/avatars/${user.displayName}.jpg`}
-                                        alt={`${user.displayName} profile`}
+                                        src={`/images/avatars/${user?.username}.jpg`}
+                                        alt={`${user?.username} profile`}
                                     />
                                 </Link>
                             </div>
+                            )}
                         </>
                     ) : (
                         <>

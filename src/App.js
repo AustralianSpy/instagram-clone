@@ -14,8 +14,7 @@ const Dashboard = lazy(() => import('./pages/dashboard'));
 const Profile = lazy(() => import('./pages/profile'));
 const SinglePost = lazy(() => import('./pages/single-post'));
 
-// 3:36:30 update seed file + firebase to
-// fix broken profile image connection.
+
 export default function App() {
   const { user } = useAuthListener();
 
